@@ -1,0 +1,15 @@
+<Project>
+  <!--
+    Settings shared by every project in this folder (the plugin, the BepInEx stub and the tests).
+    MSBuild picks this file up automatically because of its name.
+  -->
+  <PropertyGroup>
+    <!--
+      Do not stamp git details (commit id, repository address) into the built DLLs.
+      Without this, dist/PeakEngine/PeakEngine.dll would change after every commit even when
+      no code changed, because the plugin is compiled against the stub and inherits its stamp.
+    -->
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+    <EnableSourceLink>false</EnableSourceLink>
+  </PropertyGroup>
+</Project>

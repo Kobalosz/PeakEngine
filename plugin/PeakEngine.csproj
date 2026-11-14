@@ -23,9 +23,6 @@
     <DebugType>embedded</DebugType>
     <!-- Do not bake this computer's folder names into the DLL. -->
     <PathMap>$(MSBuildProjectDirectory)=PeakEngine</PathMap>
-    <!-- Do not stamp git details (commit id, repository address) into the DLL, so rebuilding unchanged code gives an identical file. -->
-    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
-    <EnableSourceLink>false</EnableSourceLink>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DistFolder>$(MSBuildThisFileDirectory)../dist/PeakEngine/</DistFolder>
   </PropertyGroup>
