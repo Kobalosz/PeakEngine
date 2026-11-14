@@ -73,8 +73,14 @@ export const revive = (player) => post('/api/player/revive', { player });
 /** Move `player` to where `to` is standing. */
 export const teleport = (player, to) => post('/api/player/teleport', { player, to });
 
-/** Give an item. `mode` is 'hand' or 'drop'; `count` only matters for 'drop'. */
+/** Give an item. `mode` is 'hand', 'drop' or 'above'; `count` is ignored for 'hand'. */
 export const spawnItem = (item, player, mode, count) => post('/api/items/spawn', { item, player, mode, count });
+
+/** Play a prank on a player. `name` is one of state.pranks; `power` is 1 to 10. */
+export const prank = (name, player, power) => post('/api/prank', { name, player, power });
+
+/** Make two players trade places. */
+export const swapPlayers = (player, other) => post('/api/prank/swap', { player, with: other });
 
 /** Switch one of your always-on cheats on or off. */
 export const setToggle = (name, on) => post('/api/toggle', { name, on });

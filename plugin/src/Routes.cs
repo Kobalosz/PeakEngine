@@ -75,7 +75,7 @@ namespace PeakEngine
 
             // ---- Items ---------------------------------------------------------------------------
 
-            // POST /api/items/spawn?item=Coconut&player=1001&mode=drop&count=3
+            // POST /api/items/spawn?item=Coconut&player=1001&mode=drop&count=3   (mode: hand, drop or above)
             router.Post("/api/items/spawn", request =>
             {
                 Items.Spawn(
@@ -83,6 +83,25 @@ namespace PeakEngine
                     Players.Find(request.Int("player")),
                     request.TextOr("mode", "hand"),
                     request.IntOr("count", 1));
+                return Done();
+            });
+
+            // ---- Mischief ------------------------------------------------------------------------
+
+            // POST /api/prank?name=trip&player=2001&power=3     (power is 1 to 10; many pranks ignore it)
+            router.Post("/api/prank", request =>
+            {
+                Pranks.Do(
+                    request.Text("name"),
+                    Players.Find(request.Int("player")),
+                    request.Query.ContainsKey("power") ? request.Float("power") : 3f);
+                return Done();
+            });
+
+            // POST /api/prank/swap?player=1001&with=2001
+            router.Post("/api/prank/swap", request =>
+            {
+                Pranks.Swap(Players.Find(request.Int("player")), Players.Find(request.Int("with")));
                 return Done();
             });
 
@@ -113,6 +132,7 @@ namespace PeakEngine
                 ["computedStatuses"] = Statuses.Computed,
                 ["players"] = players,
                 ["toggles"] = Toggles.Describe(),
+                ["pranks"] = Pranks.Describe(),
             };
         }
 

@@ -46,6 +46,29 @@ public class Character : MonoBehaviourPun
 
     [PunRPC]
     public void WarpPlayerRPC(Vector3 position, bool poof) => this.position = position;
+
+    // ---- What the mischief features call. `pranked` records them so the tests can check. ----
+
+    public readonly List<string> pranked = new List<string>();
+    public bool blocked;
+
+    [PunRPC]
+    public void RPCA_Fall(float seconds, float screenShake) => pranked.Add($"fall {seconds}");
+
+    [PunRPC]
+    public void RPCA_AddForceAtPosition(Vector3 force, Vector3 position, float radius) => pranked.Add($"force {force.y}");
+
+    [PunRPC]
+    public void JumpRpc(bool isPalJump) => pranked.Add("jump");
+
+    [PunRPC]
+    public void StopClimbingRpc(float setFall) => pranked.Add("letGo");
+
+    [PunRPC]
+    public void RPCA_PassOut() => data.passedOut = true;
+
+    [PunRPC]
+    public void RPC_SetBlockedState(bool blocked) => this.blocked = blocked;
 }
 
 public class CharacterData

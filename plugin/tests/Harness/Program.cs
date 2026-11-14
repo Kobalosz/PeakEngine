@@ -30,6 +30,8 @@ router.Get("/api/test/world", _ => new JsonObject
     ["invincible"] = Character.localCharacter.data.IsInvincibleForTests,
     ["infiniteStam"] = Character.localCharacter.infiniteStam,
     ["pushes"] = Character.localCharacter.refs.afflictions.pushes,
+    ["friendPranked"] = Character.AllCharacters[1].pranked,
+    ["friendBlocked"] = Character.AllCharacters[1].blocked,
 });
 
 new HttpServer(IPAddress.Loopback, port, router.Handle, Console.Error.WriteLine).Start();

@@ -17,6 +17,7 @@ namespace PeakEngine.Game
     public static class Items
     {
         private const int MaxPerRequest = 20;
+        private const float HeightAboveHead = 6f;
 
         private static List<JsonObject> _cache;
 
@@ -69,6 +70,7 @@ namespace PeakEngine.Game
         /// Give an item to a player.
         ///   mode "hand": put one straight into their hands.
         ///   mode "drop": drop <paramref name="count"/> of them on the ground in front of the player.
+        ///   mode "above": drop <paramref name="count"/> of them from the air onto the player's head.
         /// </summary>
         public static void Spawn(string itemName, object character, string mode, int count)
         {
@@ -86,15 +88,24 @@ namespace PeakEngine.Game
                 return;
             }
 
-            if (mode != "drop") throw new ApiError(400, "mode must be 'hand' or 'drop'.");
+            if (mode != "drop" && mode != "above") throw new ApiError(400, "mode must be 'hand', 'drop' or 'above'.");
+
+            Vector3 origin;
+            if (mode == "above")
+            {
+                origin = Players.PositionOf(character) + Vector3.up * HeightAboveHead;
+            }
+            else
+            {
+                Vector3 forward = Reflect.GetOr(character, "data.lookDirection_Flat", Vector3.forward);
+                origin = Players.PositionOf(character) + forward * 1.2f + Vector3.up * 0.5f;
+            }
 
             count = Math.Max(1, Math.Min(MaxPerRequest, count));
-            Vector3 forward = Reflect.GetOr(character, "data.lookDirection_Flat", Vector3.forward);
-            Vector3 origin = Players.PositionOf(character) + forward * 1.2f;
             for (int i = 0; i < count; i++)
             {
                 // Stack them a little so they do not spawn inside each other.
-                Net.Spawn("0_Items/" + itemName, origin + Vector3.up * (0.5f + 0.35f * i));
+                Net.Spawn("0_Items/" + itemName, origin + Vector3.up * (0.35f * i));
             }
         }
     }

@@ -193,6 +193,31 @@ input[type="radio"] { accent-color: var(--accent); }
 .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
 .item { text-align: left; overflow-wrap: anywhere; }
 
+/* ---- Mischief -------------------------------------------------------------------------------- */
+
+.button-accent { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+.button-accent:hover:not(:disabled) { filter: brightness(1.1); }
+.item-controls input[type="range"] { accent-color: var(--accent); }
+
+.pranks { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 16px 0; }
+.prank {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  text-align: left;
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.prank small { color: var(--muted); }
+.prank:hover:not(:disabled) { border-color: var(--accent); }
+.prank:active:not(:disabled) { background: #2a3441; }
+.prank:disabled { opacity: 0.4; cursor: not-allowed; }
+
 /* ---- Diagnostics ----------------------------------------------------------------------------- */
 
 .checks { width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 14px; }

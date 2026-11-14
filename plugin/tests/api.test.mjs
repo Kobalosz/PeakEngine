@@ -269,3 +269,73 @@ test('the "no statuses" toggle keeps wiping your statuses', async () => {
 test('unknown toggles are a 404', async () => {
   assert.equal((await post(HOST_PORT, '/api/toggle', { name: 'flying', on: true })).status, 404);
 });
+
+// ---- Mischief -----------------------------------------------------------------------------------
+
+const prank = (port, name, playerId, power) =>
+  post(port, '/api/prank', power === undefined ? { name, player: playerId } : { name, player: playerId, power });
+
+test('the state lists every prank and whether this game supports it', async () => {
+  const { body } = await get(HOST_PORT, '/api/state');
+  const names = body.pranks.map((p) => p.name);
+  for (const expected of ['trip', 'launch', 'jump', 'letGo', 'knockOut', 'freeze', 'unfreeze', 'skyDrop']) {
+    assert.ok(names.includes(expected), `${expected} should be listed`);
+  }
+  assert.ok(body.pranks.every((p) => p.available));
+});
+
+test('pranks work for a non-host too', async () => {
+  for (const name of ['trip', 'jump', 'letGo']) {
+    assert.equal((await prank(CLIENT_PORT, name, FRIEND)).status, 200, name);
+  }
+  const { body: world } = await get(CLIENT_PORT, '/api/test/world');
+  assert.deepEqual(world.friendPranked, ['fall 2.5', 'jump', 'letGo']);
+});
+
+test('launch makes the player limp, then pushes harder with more power', async () => {
+  await prank(HOST_PORT, 'launch', FRIEND, 2);
+  await prank(HOST_PORT, 'launch', FRIEND, 500); // far above the maximum of 10
+  const { body: world } = await get(HOST_PORT, '/api/test/world');
+  assert.deepEqual(world.friendPranked, ['fall 3', 'force 80', 'fall 3', 'force 400']);
+});
+
+test('knock out, freeze and unfreeze change the friend', async () => {
+  await prank(HOST_PORT, 'knockOut', FRIEND);
+  assert.equal((await player(HOST_PORT, FRIEND)).passedOut, true);
+  await post(HOST_PORT, '/api/player/revive', { player: FRIEND });
+  assert.equal((await player(HOST_PORT, FRIEND)).passedOut, false);
+
+  await prank(HOST_PORT, 'freeze', FRIEND);
+  assert.equal((await get(HOST_PORT, '/api/test/world')).body.friendBlocked, true);
+  await prank(HOST_PORT, 'unfreeze', FRIEND);
+  assert.equal((await get(HOST_PORT, '/api/test/world')).body.friendBlocked, false);
+});
+
+test('sky drop lifts the player straight up', async () => {
+  const before = await player(HOST_PORT, FRIEND);
+  await prank(HOST_PORT, 'skyDrop', FRIEND, 4);
+  const after = await player(HOST_PORT, FRIEND);
+  near(after.position[1] - before.position[1], 60);
+  near(after.position[0], before.position[0]);
+});
+
+test('swap makes two players trade places', async () => {
+  const meBefore = await player(HOST_PORT, ME);
+  const friendBefore = await player(HOST_PORT, FRIEND);
+  assert.equal((await post(HOST_PORT, '/api/prank/swap', { player: ME, with: FRIEND })).status, 200);
+  const meAfter = await player(HOST_PORT, ME);
+  const friendAfter = await player(HOST_PORT, FRIEND);
+  near(meAfter.position[0], friendBefore.position[0]);
+  near(friendAfter.position[0], meBefore.position[0]);
+  assert.equal((await post(HOST_PORT, '/api/prank/swap', { player: ME, with: ME })).status, 400);
+});
+
+test('unknown pranks are a 404', async () => {
+  assert.equal((await prank(HOST_PORT, 'explode', FRIEND)).status, 404);
+});
+
+test('items can be dropped onto someone\'s head', async () => {
+  assert.equal((await post(HOST_PORT, '/api/items/spawn', { item: 'Coconut', player: FRIEND, mode: 'above', count: 2 })).status, 200);
+  const { body: world } = await get(HOST_PORT, '/api/test/world');
+  assert.equal(world.spawned.filter((prefab) => prefab === '0_Items/Coconut').length, 2);
+});

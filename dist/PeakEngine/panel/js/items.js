@@ -34,10 +34,12 @@ function give(item) {
   if (!select.value) return run(() => { throw new Error('Join a run first, then pick who gets the item.'); });
 
   const who = select.selectedOptions[0].dataset.name;
-  const amount = mode() === 'drop' ? Number(count().value) || 1 : 1;
-  const message = mode() === 'drop'
-    ? `Dropped ${amount} × ${item.displayName} in front of ${who}`
-    : `Gave ${item.displayName} to ${who}`;
+  const amount = mode() === 'hand' ? 1 : Number(count().value) || 1;
+  const message = {
+    hand: `Gave ${item.displayName} to ${who}`,
+    drop: `Dropped ${amount} × ${item.displayName} in front of ${who}`,
+    above: `Dropped ${amount} × ${item.displayName} on ${who} from above`,
+  }[mode()];
   return run(() => api.spawnItem(item.name, select.value, mode(), amount), message);
 }
 
@@ -81,6 +83,6 @@ async function loadItems() {
 export function setupItems() {
   search().oninput = drawItems;
   for (const radio of document.querySelectorAll('input[name="item-mode"]')) {
-    radio.onchange = () => { count().disabled = mode() !== 'drop'; };
+    radio.onchange = () => { count().disabled = mode() === 'hand'; };
   }
 }

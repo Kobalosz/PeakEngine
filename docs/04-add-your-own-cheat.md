@@ -195,6 +195,11 @@ Restart PEAK and open the panel. Check the Diagnostics tab first: is `Character.
 
 Ideas, roughly in order of difficulty:
 
+- **A new prank.** Add one entry to the list in `plugin/src/Game/Pranks.cs` (copy `jump`, the
+  shortest one) with the `[PunRPC]` method you found. It appears in the Mischief tab
+  automatically; give it a label in `PRANK_TEXT` in `panel/js/mischief.js`, and teach the
+  pretend game the method as you did in step 6.
+
 - **A new toggle.** Add one entry to the list in `plugin/src/Game/Toggles.cs`. It appears in the
   panel automatically; give it a nicer label in `TOGGLE_TEXT` in `players.js`.
 - **"Heal everyone" button.** Pure JavaScript: loop over the players in the state and call

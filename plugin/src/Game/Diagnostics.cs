@@ -44,6 +44,9 @@ namespace PeakEngine.Game
             Method(character, "RPCA_ReviveAtPosition", "revive", checks);
             Method(character, "WarpPlayerRPC", "teleport", checks);
 
+            foreach (string method in Pranks.NeededMethods)
+                if (method != "WarpPlayerRPC") Method(character, method, "mischief", checks);
+
             Member(data, "currentStamina", "stamina", checks, "CharacterData");
             Member(data, "extraStamina", "stamina", checks, "CharacterData");
             Member(data, "dead", "dead indicator, revive", checks, "CharacterData");

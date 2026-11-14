@@ -53,6 +53,11 @@ That is normal in the main menu. Players only exist once you are in the airport 
 | *The game did not respond in time* | The game was loading or frozen. Try again. |
 | *The game's 'X' has no member called 'Y'* | The game was updated and renamed something. See the next section. |
 
+A greyed-out button on the Mischief tab means your version of the game does not have the
+method that prank needs; the Diagnostics tab names it. If a prank's button works but the effect
+is too weak or too strong (Launch especially), change the tuning constants in
+`plugin/src/Game/Pranks.cs`, then rebuild and reinstall.
+
 A friend's status slider sometimes snaps back even though you are the host: a few statuses are
 driven by the world around them (standing in snow keeps adding Cold), and some special ones
 are not accepted over the network by the game. `Weight` and `Thorns` are always calculated by

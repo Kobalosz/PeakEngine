@@ -193,12 +193,13 @@ inserts them as text (`textContent`), never as HTML. See the comment on `el()` i
 
 ```
 panel/
-  index.html          the page skeleton: three tabs
+  index.html          the page skeleton: four tabs
   style.css           how it looks
   js/api.js           every call to the game (start here)
   js/app.js           tabs + the once-a-second polling loop
   js/players.js       player cards, status sliders, toggles
   js/items.js         item search and spawning
+  js/mischief.js      pranks, targeting, roulette
   js/diagnostics.js   the compatibility table
   js/ui.js            helpers: el(), toast(), run()
 
@@ -210,6 +211,7 @@ plugin/src/
   Game/Statuses.cs    read and change status bars
   Game/Items.cs       list and spawn items
   Game/Toggles.cs     always-on cheats
+  Game/Pranks.cs      the Mischief tab's pranks
   Game/Net.cs         multiplayer helpers (RPCs, spawning)
   Game/Diagnostics.cs the self-check
   Core/…              web server, router, JSON, main-thread queue, reflection

@@ -76,7 +76,11 @@ Everything the panel draws. Polled once a second.
     "infiniteStamina": { "on": false, "error": null },
     "invincible": { "on": false, "error": null },
     "noStatus": { "on": false, "error": null }
-  }
+  },
+  "pranks": [
+    { "name": "trip", "available": true },
+    { "name": "launch", "available": true }
+  ]
 }
 ```
 
@@ -88,6 +92,7 @@ Everything the panel draws. Polled once a second.
 | `statusTypes` | Every status in *this version of the game*, read from the game itself. |
 | `computedStatuses` | Statuses the game recalculates constantly, shown read-only in the panel. |
 | `toggles.*.error` | Set when a toggle switched itself off because it stopped working. |
+| `pranks` | Every prank the plugin knows. `available` is `false` when this version of the game lacks a method the prank needs. |
 
 ### `GET /api/items`
 
@@ -153,8 +158,30 @@ next to you, or where they were if it is you (or you are dead too).
 |---|---|
 | `item` | The internal `name` from `/api/items`. |
 | `player` | Who receives it. |
-| `mode` | `hand` (default): one item straight into their hands. `drop`: on the ground in front of them. |
-| `count` | Only for `drop`. 1 to 20; larger numbers are capped at 20. |
+| `mode` | `hand` (default): one item straight into their hands. `drop`: on the ground in front of them. `above`: dropped from a few metres over their head. |
+| `count` | For `drop` and `above`. 1 to 20; larger numbers are capped at 20. |
+
+## Mischief
+
+Pranks work for hosts and non-hosts alike, on friends and on yourself.
+
+### `POST /api/prank`
+
+| Parameter | |
+|---|---|
+| `name` | A name from `pranks` in the state: `trip`, `launch`, `jump`, `letGo`, `knockOut`, `freeze`, `unfreeze`, `skyDrop`. |
+| `player` | Who it happens to. |
+| `power` | Optional, 1 to 10 (default 3, clamped). Used by `trip` (duration), `launch` (force) and `skyDrop` (height). |
+
+To prank several players, send one request per player. That is what the panel's "Everyone"
+targets do.
+
+### `POST /api/prank/swap`
+
+| Parameter | |
+|---|---|
+| `player` | The first player. |
+| `with` | The second player. They trade places. |
 
 ## Toggles
 

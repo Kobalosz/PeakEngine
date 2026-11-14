@@ -8,6 +8,7 @@
 import * as api from './api.js';
 import { renderPlayers, clearPlayers } from './players.js';
 import { renderItems, setupItems } from './items.js';
+import { renderMischief, setupMischief } from './mischief.js';
 import { loadDiagnostics, setupDiagnostics } from './diagnostics.js';
 
 const POLL_EVERY_MS = 1000;
@@ -48,6 +49,7 @@ async function poll() {
 
     renderPlayers(state);
     renderItems(state);
+    renderMischief(state);
   } catch (error) {
     showConnection(error.message, 'off');
     clearPlayers();
@@ -58,5 +60,6 @@ async function poll() {
 }
 
 setupItems();
+setupMischief();
 setupDiagnostics();
 poll();

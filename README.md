@@ -18,11 +18,14 @@ Built for Arch Linux (Steam + Proton), and written so you can read it, learn fro
 | Teleport (bring a friend to you, or go to them) | ✅ | ✅ |
 | Spawn any item into someone's hands, or drop a pile in front of them | ✅ | ✅ |
 | Always-on: infinite stamina, invincible, no statuses | ✅ | — |
+| **Mischief:** trip, launch, forced jump, let go of the wall, knock out, freeze, sky drop, swap places, drop items on their head, prank roulette | ✅ | ✅ host or not |
 
 The "only while you host" rows are a rule of the game itself: it ignores status changes for other
 players unless they come from the lobby host. The panel tells you when that applies.
 
 ![The Items tab: choose who gets the item, how, then click it](docs/images/items.png)
+
+![The Mischief tab: pick a target and a prank](docs/images/mischief.png)
 
 ## Honest status: read this first
 
@@ -31,12 +34,12 @@ What has been checked:
 
 - The plugin compiles, and its code matches the real BepInEx 5.4.23.3.
 - All of it runs against a *pretend* PEAK that copies the real game's class and method names
-  (25 automated tests, plus the panel clicked through in a real browser).
+  (33 automated tests, plus the panel clicked through in a real browser).
 - The game's names (like `Character.localCharacter` or `RPC_ApplyStatusesFromFloatArray`) were
   taken from open-source PEAK mods updated in late 2026.
 
 What that cannot prove is that every name still matches *your* version of the game. So the first
-time you start PEAK with this installed, open the panel's **Diagnostics** tab. It checks all 43
+time you start PEAK with this installed, open the panel's **Diagnostics** tab. It checks all 49
 things PeakEngine looks for and shows exactly which ones are missing, if any.
 [docs/05-troubleshooting.md](docs/05-troubleshooting.md) explains what to do then.
 
@@ -95,7 +98,7 @@ So there are two halves:
 |---|---|
 | `panel/` | The control panel (JavaScript). Start with `js/api.js`. |
 | `plugin/src/Routes.cs` | The list of everything the panel can ask for. Start here on the C# side. |
-| `plugin/src/Game/` | The code that touches the game: players, statuses, items, toggles. |
+| `plugin/src/Game/` | The code that touches the game: players, statuses, items, toggles, pranks. |
 | `plugin/src/Core/` | Plumbing: web server, JSON, running things on the game's main thread. |
 | `plugin/tests/` | A pretend PEAK and automated tests. |
 | `dist/PeakEngine/` | The ready-to-install build. `install.sh` copies this into the game. |
@@ -112,6 +115,22 @@ The docs are written for someone who knows some JavaScript and no C#. In order:
 4. [Add your own cheat](docs/04-add-your-own-cheat.md): a guided exercise that adds a "Wake up" button, end to end.
 5. [Troubleshooting](docs/05-troubleshooting.md), including what to do after a game update.
 6. [Learning resources](docs/06-learning-resources.md): where to read more about each technology used here.
+
+## Mischief
+
+The Mischief tab is for pranking friends. Pick a target (one player, everyone except you, or
+everyone), set the Power slider, and press a prank. **Roulette** plays a random prank on a
+random friend. To drop a coconut on someone, use "Drop on their head" on the Items tab.
+
+Two things to know before your first prank:
+
+- **The numbers are guesses.** How hard "Launch" throws and how long "Trip" lasts depend on the
+  game's physics, which could not be measured without the game. Try each prank on yourself
+  first. The numbers to tune are in `plugin/src/Game/Pranks.cs`.
+- **Some pranks can end a run.** A sky drop, or letting go on a tall wall, can kill a friend.
+  Revive is one click away on the Players tab.
+
+Adding your own prank is one entry in `plugin/src/Game/Pranks.cs`; the button appears by itself.
 
 ## Play nice
 
