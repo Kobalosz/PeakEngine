@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeakEngine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>PeakEngine</h1>
+    <!-- app.js fills this in: "Waiting for game", "In a run (host)", ... -->
+    <span id="connection" class="pill pill-off">Connecting…</span>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab is-active" data-tab="players" role="tab">Players</button>
+      <button class="tab" data-tab="items" role="tab">Items</button>
+      <button class="tab" data-tab="diagnostics" role="tab">Diagnostics</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Each <section> is one tab. app.js shows one and hides the others. -->
+
+    <section id="tab-players" class="tab-page">
+      <div class="panel">
+        <h2>My cheats</h2>
+        <p class="hint">These stay on until you switch them off or close the game. They only affect you.</p>
+        <div id="toggles" class="toggles"></div>
+      </div>
+
+      <p id="players-empty" class="empty">Start or join a run in PEAK and your party shows up here.</p>
+      <p id="host-note" class="note" hidden>
+        You are not the lobby host, so the game will not let you change your friends' statuses.
+        Everything else still works. Host the lobby to unlock it.
+      </p>
+      <div id="players" class="cards"></div>
+    </section>
+
+    <section id="tab-items" class="tab-page" hidden>
+      <div class="panel item-controls">
+        <label>Give to
+          <select id="item-target"></select>
+        </label>
+
+        <fieldset>
+          <legend>How</legend>
+          <label><input type="radio" name="item-mode" value="hand" checked> Into their hands</label>
+          <label><input type="radio" name="item-mode" value="drop"> Drop in front of them</label>
+        </fieldset>
+
+        <label>How many
+          <input id="item-count" type="number" min="1" max="20" value="1" disabled>
+        </label>
+
+        <label class="grow">Search
+          <input id="item-search" type="search" placeholder="rope, coconut, …" autocomplete="off">
+        </label>
+      </div>
+
+      <p id="items-empty" class="empty">The item list loads once the game has started.</p>
+      <div id="items" class="items"></div>
+    </section>
+
+    <section id="tab-diagnostics" class="tab-page" hidden>
+      <div class="panel">
+        <h2>Does PeakEngine still match your game version?</h2>
+        <p class="hint">
+          PeakEngine finds things in the game by name. When PEAK updates, a name can change and the
+          feature that used it stops working. A row marked “missing” tells you which one.
+          See <code>docs/05-troubleshooting.md</code> for how to fix it.
+        </p>
+        <button id="diagnostics-refresh" class="button">Check again</button>
+        <p id="diagnostics-summary" class="hint"></p>
+        <table id="diagnostics" class="checks"></table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Short messages ("Spawned Coconut", errors) pop up here. See js/ui.js. -->
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <!-- type="module" lets our JavaScript files import from each other. -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

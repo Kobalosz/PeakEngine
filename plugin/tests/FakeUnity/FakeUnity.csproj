@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    A pretend UnityEngine, used only by the tests. The real UnityEngine DLLs only work inside a
+    running Unity game, so the tests swap in this tiny pure-C# look-alike with the same assembly name.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>UnityEngine.CoreModule</AssemblyName>
+    <RootNamespace>UnityEngine</RootNamespace>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>CS0660;CS0661</NoWarn>
+  </PropertyGroup>
+</Project>

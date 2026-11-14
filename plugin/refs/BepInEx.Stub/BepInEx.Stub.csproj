@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A "reference stub": an empty look-alike of the real BepInEx.dll.
+
+    The compiler only needs to know WHICH classes and methods BepInEx has, not what they do.
+    This project declares just the handful we use, with the same names and signatures as the
+    real thing, so PeakEngine can be compiled on a machine that does not have the game.
+
+    This DLL is never shipped. At runtime the game loads the real BepInEx.dll instead.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>BepInEx</AssemblyName>
+    <RootNamespace>BepInEx</RootNamespace>
+    <Version>5.4.21.0</Version>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" IncludeAssets="compile" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

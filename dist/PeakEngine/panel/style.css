@@ -1,0 +1,228 @@
+/* style.css — how the control panel looks. Colours are defined once here and reused below. */
+
+:root {
+  --bg: #12161c;
+  --panel: #1b222b;
+  --panel-edge: #2a3441;
+  --text: #e8edf2;
+  --muted: #94a3b3;
+  --accent: #f2a93b;      /* PEAK-ish campfire orange */
+  --accent-text: #1b1305;
+  --good: #58c27d;
+  --bad: #e5645b;
+  --extra: #f5d547;
+  --radius: 10px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: 20px; letter-spacing: 0.02em; }
+h2 { font-size: 16px; }
+h3 { font-size: 16px; overflow-wrap: anywhere; }
+code { font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 13px; }
+[hidden] { display: none !important; }
+
+/* ---- Top bar and tabs ---------------------------------------------------------------------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--panel-edge);
+}
+
+.tabs { display: flex; gap: 4px; margin-left: auto; }
+
+.tab {
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+.tab:hover { color: var(--text); }
+.tab.is-active { background: var(--accent); color: var(--accent-text); font-weight: 600; }
+
+.pill { padding: 3px 10px; border-radius: 999px; font-size: 13px; border: 1px solid transparent; }
+.pill-ok { color: var(--good); border-color: var(--good); }
+.pill-wait { color: var(--extra); border-color: var(--extra); }
+.pill-off { color: var(--bad); border-color: var(--bad); }
+
+main { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* ---- Shared pieces --------------------------------------------------------------------------- */
+
+.panel {
+  padding: 16px;
+  margin-bottom: 16px;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius);
+}
+
+.hint { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.empty { color: var(--muted); text-align: center; padding: 32px 0; }
+.note {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--extra);
+  background: var(--panel);
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.button, .item {
+  padding: 6px 12px;
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  background: #242d38;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.button:hover:not(:disabled), .item:hover { border-color: var(--accent); }
+.button:active:not(:disabled), .item:active { background: var(--accent); color: var(--accent-text); }
+.button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---- My cheats (toggles) --------------------------------------------------------------------- */
+
+.toggles { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 12px; }
+.toggle { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.toggle input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); }
+.toggle-text { display: flex; flex-direction: column; }
+.toggle-text small { color: var(--muted); }
+.toggle-error { color: var(--bad); font-size: 12px; max-width: 320px; }
+
+/* ---- Player cards ---------------------------------------------------------------------------- */
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+.card {
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius);
+}
+.card.is-dead { border-color: var(--bad); }
+
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.badges { display: flex; gap: 6px; flex-shrink: 0; }
+.badge { padding: 1px 8px; border-radius: 999px; font-size: 12px; background: #2f3a47; color: var(--muted); }
+.badge-me { background: var(--accent); color: var(--accent-text); font-weight: 600; }
+.badge-bad { background: var(--bad); color: #fff; }
+
+/* The stamina bar, with a thin yellow bar underneath for bonus stamina. */
+.bar {
+  position: relative;
+  height: 20px;
+  margin: 12px 0 3px;
+  overflow: hidden;
+  background: #0d1116;
+  border-radius: 6px;
+}
+.bar-thin { height: 5px; margin: 0 0 12px; }
+.bar-fill { height: 100%; transition: width 0.3s; }
+.bar-stamina { background: var(--good); }
+.bar-extra { background: var(--extra); }
+.bar-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px #000;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+
+.statuses { display: grid; gap: 4px; }
+.status { display: grid; grid-template-columns: 70px 1fr 44px; align-items: center; gap: 8px; font-size: 13px; }
+.status-name { color: var(--muted); }
+.status-value { text-align: right; font-variant-numeric: tabular-nums; }
+.status input[type="range"] { width: 100%; accent-color: var(--accent); }
+.status input:disabled { opacity: 0.35; }
+
+/* ---- Items ----------------------------------------------------------------------------------- */
+
+.item-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; }
+.item-controls label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+.item-controls .grow { flex: 1; min-width: 180px; }
+.item-controls fieldset {
+  display: flex;
+  gap: 14px;
+  margin: 0;
+  padding: 4px 10px 6px;
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+}
+.item-controls fieldset label { flex-direction: row; align-items: center; color: var(--text); }
+.item-controls legend { font-size: 13px; color: var(--muted); padding: 0 4px; }
+
+select, input[type="number"], input[type="search"] {
+  padding: 6px 8px;
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  background: #0d1116;
+  color: var(--text);
+  font: inherit;
+}
+input[type="number"] { width: 80px; }
+input:disabled { opacity: 0.4; }
+input[type="radio"] { accent-color: var(--accent); }
+
+.items { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.item { text-align: left; overflow-wrap: anywhere; }
+
+/* ---- Diagnostics ----------------------------------------------------------------------------- */
+
+.checks { width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 14px; }
+.checks th, .checks td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--panel-edge); }
+.checks th { color: var(--muted); font-weight: 500; }
+.checks td:first-child { color: var(--good); }
+.checks .is-missing td:first-child { color: var(--bad); font-weight: 600; }
+
+/* ---- Toasts (pop-up messages) ---------------------------------------------------------------- */
+
+.toasts {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: min(420px, calc(100vw - 40px));
+}
+.toast {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #24303c;
+  border-left: 4px solid var(--good);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 40%);
+}
+.toast-error { border-left-color: var(--bad); }
+
+@media (max-width: 600px) {
+  .tabs { margin-left: 0; width: 100%; }
+  main { padding: 12px; }
+}

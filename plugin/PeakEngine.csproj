@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The build recipe for the plugin (the C# equivalent of package.json).
+
+    Build it with:   dotnet build -c Release        (or run scripts/build.sh from the repo root)
+    Result:          dist/PeakEngine/PeakEngine.dll + dist/PeakEngine/panel/
+
+    You do NOT need the game installed to build: everything in the game is looked up by name
+    at runtime (see src/Core/Reflect.cs), so the only compile-time references are Unity's
+    basic types (from NuGet) and a stub of BepInEx (see refs/BepInEx.Stub).
+  -->
+  <PropertyGroup>
+    <!-- netstandard2.1 is the flavour of .NET that Unity 6 (PEAK's engine version) understands. -->
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>PeakEngine</AssemblyName>
+    <RootNamespace>PeakEngine</RootNamespace>
+    <Version>0.1.0</Version>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <!-- Keep the output folder free of extra files: no .deps.json, no debug symbols file. -->
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <DebugType>embedded</DebugType>
+    <!-- Do not bake this computer's folder names into the DLL. -->
+    <PathMap>$(MSBuildProjectDirectory)=PeakEngine</PathMap>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DistFolder>$(MSBuildThisFileDirectory)../dist/PeakEngine/</DistFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="refs/**" />
+    <Compile Remove="tests/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Unity's basic types (Vector3, MonoBehaviour, GameObject...). Compile-time only: the game brings its own. -->
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" IncludeAssets="compile" PrivateAssets="all" />
+    <!-- BepInEx's plugin API. Compile-time only (Private=false means "do not copy it to the output"). -->
+    <ProjectReference Include="refs/BepInEx.Stub/BepInEx.Stub.csproj" Private="false" />
+  </ItemGroup>
+
+  <!-- After a Release build, assemble the ready-to-install folder: the DLL plus the JavaScript panel. -->
+  <Target Name="AssembleDist" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <PanelFiles Include="$(MSBuildThisFileDirectory)../panel/**/*" />
+    </ItemGroup>
+    <RemoveDir Directories="$(DistFolder)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DistFolder)" />
+    <Copy SourceFiles="@(PanelFiles)" DestinationFolder="$(DistFolder)panel/%(RecursiveDir)" />
+    <Message Importance="high" Text="PeakEngine is ready in $(DistFolder)" />
+  </Target>
+
+</Project>

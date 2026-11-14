@@ -1,0 +1,7 @@
+# Build leftovers (the ready-to-install result in dist/ IS kept on purpose)
+bin/
+obj/
+*.user
+.vs/
+.idea/
+node_modules/
